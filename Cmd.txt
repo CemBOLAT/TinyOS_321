@@ -1,0 +1,49 @@
+📜 GTU-C312 Komut Seti
+
+SET B A
+    Bellek adresi A’ya doğrudan B sayısını yazar.
+
+CPY A1 A2
+    Bellek adresi A1’in içeriğini A2’ye kopyalar.
+
+CPYI A1 A2
+    A1’in gösterdiği adresteki içeriği A2’ye kopyalar. (Dolaylı kopyalama)
+
+ADD A B
+    Bellek adresi A’daki değere B sayısını ekler.
+
+ADDI A1 A2
+    A2’deki değeri A1’deki değere ekler. (Dolaylı toplama)
+
+SUBI A1 A2
+    A2’ye A1 - A2 işleminin sonucunu yazar. (Dolaylı çıkarma)
+
+JIF A C
+    A adresindeki değer ≤ 0 ise program sayacını C yapar.
+
+PUSH A
+    A adresindeki değeri stack’e push eder.
+
+POP A
+    Stack’ten pop edip A adresine yazar.
+
+CALL C
+    C adresindeki subroutine’i çağırır, dönüş adresini stack’e atar.
+
+RET
+    Stack’ten dönüş adresini alıp oraya gider (subroutine’den çıkış).
+
+HLT
+    CPU’yu durdurur.
+
+USER
+    Kullanıcı moduna geçer.
+
+SYSCALL PRN A
+    A adresindeki değeri ekrana yazar ve çağıran thread’i 100 döngü boyunca bloklar.
+
+SYSCALL HLT
+    Thread’i sonlandırır.
+
+SYSCALL YIELD
+    CPU’yu bırakır, scheduler başka bir thread seçebilir.

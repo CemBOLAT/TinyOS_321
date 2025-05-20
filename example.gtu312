@@ -1,0 +1,82 @@
+Begin Data Section
+0 60       # PC → OS başlasın
+1 65500     # SP en alta
+2 0         # SYSCALL_RESULT
+3 0         # INSTR_COUNT
+4 0
+5 0
+6 0
+7 0
+8 0
+9 0
+10 0
+11 0
+12 0
+13 0
+14 0
+15 0
+16 0
+17 0    # R18 (first multiplier) = 0
+18 0    # R19 (second multiplier) = 0
+19 0    # R20 (result) = 0
+
+# OS Variables --
+20 0    # Current runninhg thread ID (0-10) zero for OS and to 10
+21 10   # Total Number of threads except OS
+22 0    # Temp variable ->1
+23 100 # Thread base offset
+24 0    # Temp variable ->2
+25 0    # Temp variable ->3
+26 0    # of periodic checks
+27 100 # Thread base offset for as temp.
+28 0    # Temp variable ->4
+29 0    # Temp variable ->5
+30 0    # Temp variable ->6
+31 0    # Register load counter
+
+
+# Thread Table (starts at adress 100)
+50 0    # TID 0
+51 0    # Start time
+52 0    # Execution time
+53 1    # Thread state (0: ready, 1: running, 2: blocked)
+54 50   # PC - of OS
+55 9500 # SP - of OS
+
+# Thread 1
+1000 1    # TID 1
+1001 0    # Start time (it will be set by OS for first execution of thread)
+1002 0    # Execution count
+1003 0    # Thread state (0: ready, 1: running, 2: blocked)
+1004 1020 # PC - of thread 1
+1005 1990 # SP - of thread 1
+
+# Thread 2
+2000 2    # TID 2
+2001 0    # Start time (it will be set by OS for first execution of thread)
+2002 0    # Execution count
+2003 0    # Thread state (0: ready, 1: running, 2: blocked)
+2004 2000 # PC - of thread 2
+2005 2990 # SP - of thread 2
+
+# Thread 3
+3000 3    # TID 3
+3001 0    # Start time (it will be set by OS for first execution of thread)
+3002 0    # Execution count
+3003 0    # Thread state (0: ready, 1: running, 2: blocked)
+3004 3000 # PC - of thread 3
+3005 3990 # SP - of thread 3
+
+End Data Section
+
+Begin Instruction Section
+
+
+# Thread 1 code add 2 number and print the result
+1020 SET 10 17            # R17 = 0 (first multiplier)
+1021 SET 12 18            # R18 = 0 (second multiplier)
+1022 ADDI 17 18           # R18 = R17 + R18 (R18 = first multiplier + second multiplier)
+1023 CPY 18 20            # R20 = R18 (result)
+1024 SYSCALL PRN 20       # Print the result
+
+End Instruction Section

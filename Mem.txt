@@ -1,0 +1,14 @@
+| **Address Range** | **Data Segment** | **Instruction Segment** | **Explanation**                                |
+| ----------------- | ---------------- | ----------------------- | ---------------------------------------------- |
+| `0 - 20`          | Registers        | OS area                 | Of course, the registers are accessible to all |
+| `0 - 999`         | OS data only     | OS instruction only     | USER mode can’t access this area               |
+| `1000 - 1999`     | Thread #1 data   | Thread #1 instructions  |                                                |
+| `2000 - 2999`     | Thread #2 data   | Thread #2 instructions  |                                                |
+| `3000 - 3999`     | Thread #3 data   | Thread #3 instructions  |                                                |
+| `4000 - 4999`     | Thread #4 data   | Thread #4 instructions  |                                                |
+| `5000 - 5999`     | Thread #5 data   | Thread #5 instructions  |                                                |
+| `6000 - 6999`     | Thread #6 data   | Thread #6 instructions  |                                                |
+| `7000 - 7999`     | Thread #7 data   | Thread #7 instructions  |                                                |
+| `8000 - 8999`     | Thread #8 data   | Thread #8 instructions  |                                                |
+| `9000 - 9999`     | Thread #9 data   | Thread #9 instructions  |                                                |
+| `10000 - 10999`   | Thread #10 data  | Thread #10 instructions |                                                |
