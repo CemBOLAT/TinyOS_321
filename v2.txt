@@ -1,0 +1,520 @@
+Begin Data Section
+# Special registers
+0 190           # PC initially points to OS init code at address 100
+1 950           # Stack pointer initially points to OS stack
+2 0             # System call result
+3 0             # Number of instructions executed
+18 0
+19 0
+20 0 			# Return value from function
+
+# OS Variables - Using lower addresses for OS data
+
+21 0           	# Current running thread ID (0 = OS)
+22 10           # Active threads
+23 50           # round robin thread table offset, every run next thread it is incremented 40
+24 0            # last executed thread id
+25 0            # next executed thread id
+26 0            # Using this for CPYI2 indirect ref
+27 0            # Using this for CPYI2 indirect ref
+28 0 			# For determining which syscall to call
+29 0            # For determining where to jump at the end
+30 0 			# leave it always 0
+31 0 			# 
+
+49 0            # thread table offset of next instruction
+
+# Thread Table (starts at address 50)
+# Using 40 bytes per thread entry for extensibility
+# Thread 0 (OS)
+50 0            # Thread ID = 0 (OS)
+51 0            # Start time
+52 0            # Execution count
+53 1            # Thread state (1 = running)
+54 100          # PC - OS init code
+55 950          # SP - OS stack
+56 0            # Block counter
+
+# Additional thread data (addresses 57-89) reserved for future extensions
+
+# Thread 1
+90 1            # Thread ID = 1
+91 0            # Start time (will be set when thread first runs)
+92 0            # Execution count
+93 0            # Thread state (0 = ready)
+94 1000         # PC - Thread 1 start address
+95 1900         # SP - Thread 1 stack 
+96 0            # Block counter
+
+
+101 1900        # Stack pointer
+110 4           # test
+
+100 # saved register 2 
+# Additional thread data (addresses 97-129) reserved for future extensions
+
+# Thread 2
+130 2           # Thread ID = 2
+131 0           # Start time (will be set when thread first runs)
+132 0           # Execution count
+133 0           # Thread state (0 = ready)
+134 2000        # PC - Thread 2 start address
+135 2900        # SP - Thread 2 stack
+136 0           # Block counter
+
+# Additional thread data (addresses 137-169) reserved for future extensions
+
+# Thread 3
+170 3           # Thread ID = 3
+171 0           # Start time
+172 0           # Execution count
+173 0           # Thread state (0 = ready)
+174 3000        # PC - Thread 3 start address
+175 3900        # SP - Thread 3 stack
+176 0           # Block counter
+# Additional thread data (addresses 177-209) reserved for future extensions
+
+# Thread 4
+210 4           # Thread ID = 3
+211 0           # Start time
+212 0           # Execution count
+213 0           # Thread state (0 = ready)
+214 4000        # PC - Thread 3 start address
+215 4900        # SP - Thread 3 stack
+216 0           # Block counter
+# Additional thread data (addresses 177-209) reserved for future extensions
+
+# Thread 5
+250 5           # Thread ID = 3
+251 0           # Start time
+252 0           # Execution count
+253 0           # Thread state (0 = ready)
+254 5000        # PC - Thread 3 start address
+255 5900        # SP - Thread 3 stack
+256 0           # Block counter
+# Additional thread data (addresses 177-209) reserved for future extensions
+
+# Thread 6
+290 6           # Thread ID = 3
+291 0           # Start time
+292 0           # Execution count
+293 0           # Thread state (0 = ready)
+294 6000        # PC - Thread 3 start address
+295 6900        # SP - Thread 3 stack
+296 0           # Block counter
+# Additional thread data (addresses 177-209) reserved for future extensions
+
+# Thread 7
+330 7           # Thread ID = 3
+331 0           # Start time
+332 0           # Execution count
+333 0           # Thread state (0 = ready)
+334 7000        # PC - Thread 3 start address
+335 7900        # SP - Thread 3 stack
+336 0           # Block counter
+# Additional thread data (addresses 177-209) reserved for future extensions
+
+# Thread 8
+370 8           # Thread ID = 3
+371 0           # Start time
+372 0           # Execution count
+373 0           # Thread state (0 = ready)
+374 8000        # PC - Thread 3 start address
+375 8900        # SP - Thread 3 stack
+376 0           # Block counter
+# Additional thread data (addresses 177-209) reserved for future extensions
+
+# Thread 9
+410 9           # Thread ID = 3
+411 0           # Start time
+412 0           # Execution count
+413 0           # Thread state (0 = ready)
+414 9000        # PC - Thread 3 start address
+415 9900        # SP - Thread 3 stack
+416 0           # Block counter
+# Additional thread data (addresses 177-209) reserved for future extensions
+
+# Thread 10
+450 10          # Thread ID = 3
+451 0           # Start time
+452 0           # Execution count
+453 0           # Thread state (0 = ready)
+454 10000        # PC - Thread 3 start address
+455 10900        # SP - Thread 3 stack
+456 0           # Block counter
+# Additional thread data (addresses 177-209) reserved for future extensions
+
+# Continue for threads 4-10...
+# Thread 4 would start at 210, Thread 5 at 250, etc.
+
+
+
+# First thread data - Linear search
+# program will return the index if found
+
+1000 0 # counter
+1001 7 # N == number of element
+1002 1100 # array start address
+1003 15 # key to search
+1100 2 # First element
+1101 5 
+1102 10 
+1103 20 
+1104 15
+1105 40
+1106 99
+
+
+
+# Second thread data - Sorting
+# 2000 0 # current index pointer
+# 2001 5 # N == number of element
+# 2100 5
+# 2101 10
+# 2102 3
+# 2103 40
+# 2104 1
+
+
+End Data Section
+
+
+Begin Instruction Section
+# OS Initialization Code (starts at 100 - OS entry point)
+# Initialize thread table and start scheduling
+
+# Each section is organized with space for expansion
+# 100-199: OS Initialization
+# 200-399: Scheduler and Context Switching
+# 400-599: System Call Handlers
+# 600-799: Helper functions (checking blocked threads, etc.)
+
+
+
+
+#  STEP1 -> MAKE CURRENT THREAD STATE AS READY
+149 SET 152 29
+150 CPY 21 48
+151 SET 650 0   # FIND THE OFFSET PUT IT TO X23
+152 CPY 23 32
+153 ADD 32 3
+154 SET 0 33
+155 SET 33 34
+156 CPYI2 34 32
+
+# RUN NEXT THREAD:
+
+
+#  STEP2 -> SAVE THE REGISTERS OF CURRENT THREAD
+180 CPY 21 24 # set last executed instruction
+181 SET 190 29
+182 SET 520 0 # jump to save register function
+183 SET 0 21 # set OS as current running
+184 SET 50 23 # set offset of OS thread table
+
+# LOAD OS REGISTERS 
+190 SET 195 29
+191 SET 600 0
+
+
+# CHECK ACTIVE == 0 , IF SO HALT
+195 JIF 22 198
+197 JIF 30 212
+198 HLT
+
+# STEP3 -> CHECK NEXT THREAD ID IS VALID (between 0-10)
+212 SET 11 31 	  	   
+213 CPY 24 32
+214 ADD 32 1
+215 SUBI 31 32 			# X32 = X31 - X32 , if <= 0 then we exceed the threads table
+216 JIF 32 251			# jump to WRAP_THE_THREAD_COUNTER
+
+# STEP4 -> FIND NEXT THREAD OFFSET AND SAVE IT INTO X23
+220 CPY 24 25
+221 ADD 25 1
+222 CPY 25 48    # FIND OFFSET OF X25
+223 SET 235 29
+224 SET 650 0
+
+
+# STEP5 -> CHECK IF NEXT THREAD STATUS IS READY, IF NOT SKIP (ready state code == 0)
+235 CPY 23 31
+236 ADD 31 3 		# Now it x31 points to thread state
+237 SET 31 27 
+238 CPYI2 31 27
+239 JIF 31 300   	# JUMP TO RUN_THREAD , x31 == 0 jump to run_thread
+
+
+
+
+# thread is not runnable run the next one
+244 ADD 24 1
+245 JIF 30 212 	 	# JUMPING TO run the next thread
+
+
+
+# WRAP_THE_THREAD_COUNTER
+251 SET 0 24
+252 JIF 30 212	# Run the thread 1 as next.
+
+
+
+
+
+# load the registers for that thread.
+
+# change the state to running 
+# update the current running thread id from offset.
+# update the start time if not available.
+# set the stack pointer and program counter. ??? user mode
+# RUN_THREAD:
+
+# RUN_THREAD: Prepare and execute the selected thread or already running thread
+
+# Mark thread as running (state = 1) 
+300 CPY 23 31          # Copy thread table address to 24
+301 ADD 31 3           # Address of thread state
+302 SET 1 32           # Set running state value
+303 CPY 32 26
+304 SET 26 27
+305 CPYI2 27 31          # Update state to running
+
+# Update thread info and check if first run
+#306 CPY 23 31          # Get thread base address
+#307 ADD 31 1           # Address of start time
+#308 CPYI 31 32         # Get current start time
+#309 JIF 32 315         # Skip if not zero (already started)
+#310 CPY 3 33           # Get current instruction count /// burayi kontrol et bu yanlis
+#311 CPY 33 26
+#312 SET 26 27
+#313 CPYI2 27 31          # Set start time to current instruction count
+
+# Update execution count
+315 CPY 23 31          # Get thread base address
+316 ADD 31 2           # Address of execution count
+317 CPYI 31 32         # Get current execution count
+318 ADD 32 1           # Increment execution count
+319 CPY 32 26
+320 SET 26 27
+321 CPYI2 27 31         # Update execution count
+
+# Save thread ID as current running thread
+322 CPY 23 49
+323 CPYI 23 32         # Get thread ID
+324 CPY 32 21          # Update current thread ID
+
+328 SET 50 23
+# SAVE REGISTERS OF OS
+330 SET 335 29
+331 JIF 30 520
+
+335 CPY 49 23
+
+# LOAD REGISTERS FOR THE NEXT THREAD
+340 SET 345 29 # Return address
+341 JIF 30 600 # Load registers of thread.
+
+
+# Switch to user mode, jumping to thread 
+345 USER               # Switch to user mode
+
+
+
+
+
+# System Call Handlers (addresses 360-599)
+# This is where system calls are processed
+
+# SYSCALL Entry Point - determine which system call
+360 CPY 23 31         # x31 = base address of thread entry
+361 CPY 28 32 		# x32 = which syscall to call
+
+
+
+# save the registers of current thread on context switch
+# 380 SET 390 29
+# 381 JIF 30 520 
+
+
+# MAKE THREAD STATE AS READY 
+#390 CPY 23 31 #
+#391 ADD 31 3 # x31 = address of thread state
+#392 SET 0 32 # x32 = ready state 0
+#393 CPY 32 18
+#394 SET 18 19
+#395 CPYI2 19 31 # now thread is at ready state.
+
+# MAKE CURRENT THREAD AS OS AND LOAD ITS REGISTERS.
+
+#400 SET 0 21
+#401 SET 415 29
+#402 JIF 30 600
+
+
+
+
+# CHECK FOR < 2 INDEXES AND JUMP TO 429
+
+# Determine system call type and jump to appropriate handler
+415 SET 2 34         # Check for PRN (assuming code value 2)
+416 CPY 32 33
+417 SUBI 33 34         # Is it PRN?
+418 JIF 34 430         # If yes, jump to PRN handler
+
+419 SET 3 34         # Check for HLT (assuming code value 3)
+420 CPY 32 33
+421 SUBI 33 34         # Is it HLT
+422 JIF 34 450         # If yes, jump to  handler
+
+423 SET 4 34         # Check for YIELD (assuming code value 4)
+424 CPY 32 33
+425 SUBI 33 34         # Is it YIELD
+426 JIF 34 460         # If yes, jump to  handler
+
+
+
+429 HLT          # Unknown system call, Halt the cpu
+
+
+
+
+# SYSCALL PRN handler
+# WAIT IDLE FOR 80 CYCLE THAN LOOP BACK.
+
+430 SET 80 31
+431 ADD 31 -1
+432 JIF 31 149 # IDLE WAITING IS OVER SWITCH TO NEXT THREAD
+433 JIF 30 430 # LOOP BACK
+
+
+# SYSCALL HLT handler
+450 CPY 23 31 #
+451 ADD 31 3 # x31 = address of thread state
+452 SET 2 32 # x32 = blocked state 2
+453 CPY 32 40
+454 SET 40 41
+455 CPYI2 41 31 # now thread is blocked.
+456 ADD 22 -1 # 
+457 JIF 30 180 # RUN_NEXT_THREAD
+
+
+# SYSCALL YIELD handler 
+466 JIF 30 149 # RUN_NEXT_THREAD
+
+
+
+
+
+#SAVE REGISTER OF THE CURRENT THREAD:
+
+520 CPY 23 31 # x31 = THREAD TABLE OFFSET
+521 ADD 31 10 # X31 = FIRST REGISTER ADDRESS
+522 SET 2 32 # register counter
+523 SET 21 33 # x33 = max register
+
+#LOOP
+
+524 CPY 31 34
+525 ADDI 34 32 # x34 = targeted register address
+526 CPYI 32 40
+527 SET 40 41
+528 CPYI2 41 34
+529 ADD 32 1
+
+
+#CHECK CONDITION FOR LOOP
+
+530 CPY 33 35
+531 CPY 32 36
+532 SUBI 35 36
+533 JIF 36 629 # IF true so its over.
+534 JIF 30 524 # continue saving 
+# DONE SAVING
+
+
+
+
+
+# LOAD REGISTER OF THE CURRENT THREAD
+600 CPY 23 31          # Get thread base address
+601 ADD 31 10          # Address of first additional register (offset + 20)
+602 SET 1 32           # Start with register 1
+603 SET 21 33          # End with register 20
+
+604 CPY 31 34
+605 ADDI 34 32
+606 CPYI 34 40
+607 SET 40 41
+608 CPYI2 41 32
+609 ADD 32 1
+
+# Check if we've loaded all registers
+610 CPY 33 35
+611 CPY 32 36
+612 SUBI 35 36         # Check if we've reached register 20
+613 JIF 36 629        # Done
+614 JIF 30 604		   # LOOP TO START
+# Done loading registers
+
+
+# JUMP TO ADDRES x29 points to.
+629 CPY 29 0
+
+# FIND OFFSET FROM ID, x48 == id , 
+650 SET 0 41
+651 SET 50 42
+
+665 CPY 41 43     # CHECK IF ITS DONE
+666 SUBI 48 43
+667 JIF 43 690   # FINISH
+
+670 ADD 41 1     # LOOP
+671 ADD 42 40
+672 SET 665 0
+
+
+690 CPY 42 23
+691 CPY 29 0
+
+
+
+
+
+# Helper Functions (addresses 600-799)
+# Check Blocked Threads function - unblocks threads that have 
+
+# Error Handlers and Utilities (addresses 800-999)
+# (Add any error handling or utility functions here)
+
+
+
+# First thread - Linear search
+1000 SYSCALL YIELD
+1001 SYSCALL HLT
+
+2000 SYSCALL YIELD
+2001 SYSCALL HLT
+
+3000 SYSCALL YIELD
+3001 SYSCALL HLT
+
+4000 SYSCALL YIELD
+4001 SYSCALL HLT
+
+5000 SYSCALL YIELD
+5001 SYSCALL HLT
+
+6000 SYSCALL HLT
+
+7000 SYSCALL HLT
+
+8000 SYSCALL YIELD
+8001 SYSCALL HLT
+
+9000 SYSCALL YIELD
+8002 SYSCALL HLT
+
+10000 SYSCALL YIELD
+10001 SYSCALL HLT
+
+End Instruction Section
